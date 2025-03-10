@@ -36,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5d5b1c6d-d230-49a7-a48f-d130ad1c7d8d"
+      }
+    },
+    "owner": "tonyaneke"
   }
 }
