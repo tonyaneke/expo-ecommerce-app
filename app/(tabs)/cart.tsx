@@ -9,11 +9,11 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useShop, CartItem } from "../contexts/ShopContext";
-import { useTheme } from "../contexts/ThemeContext";
+import { useShop, CartItem } from "../../contexts/ShopContext";
+import { useTheme } from "../../contexts/ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
-import { Button } from "../components/ui/button";
+import { Button } from "../../components/ui/button";
 
 export default function CartScreen() {
   const {

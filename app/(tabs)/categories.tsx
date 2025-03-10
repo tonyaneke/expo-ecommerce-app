@@ -10,8 +10,8 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from "react-native";
-import { useShop, Category } from "../contexts/ShopContext";
-import { useTheme } from "../contexts/ThemeContext";
+import { useShop, Category } from "../../contexts/ShopContext";
+import { useTheme } from "../../contexts/ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";

@@ -1,5 +1,4 @@
-name: Test and Preview Build
-
+name: Test and Deploy
 on:
   push:
     branches: [main]
@@ -15,22 +14,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: "18.x"
           cache: "npm"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run tests
         run: npm test
 
-      - name: Upload coverage to Codecov
+      - name: Upload coverage reports
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  preview-build:
+  build-and-deploy:
     needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -38,7 +38,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: "18.x"
           cache: "npm"
 
       - name: Setup EAS
@@ -48,19 +48,23 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build Preview
         run: eas build --platform all --profile preview --non-interactive
 
-      - name: Comment Preview URL
-        uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🚀 Preview build started! You can find the build status in your Expo dashboard.'
-            })
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          body: |
+            Release v${{ github.run_number }}
+
+            Changes in this release:
+            ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,13 +9,14 @@ import {
   TextInput,
   SafeAreaView,
   TouchableOpacity,
+  Animated,
 } from "react-native";
-import { useShop, Product } from "../contexts/ShopContext";
-import { useTheme } from "../contexts/ThemeContext";
+import { useShop, Product } from "../../contexts/ShopContext";
+import { useTheme } from "../../contexts/ThemeContext";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Button } from "../components/ui/button";
+import { Button } from "../../components/ui/button";
 
 export default function ProductsScreen() {
   const { products, addToCart, isInCart, toggleFavorite, isFavorite } =
@@ -25,6 +26,7 @@ export default function ProductsScreen() {
   const [isGridView, setIsGridView] = useState(true);
   const [sortBy, setSortBy] = useState<"name" | "price" | "rating">("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [loading, setLoading] = useState(true);
 
   // Filter products based on search query
   const filteredProducts = products.filter((product) =>
@@ -57,8 +59,32 @@ export default function ProductsScreen() {
 
   const handleProductPress = (productId: number) => {
     // Use this approach for navigation to a dynamic route
-    router.push(`/product/${productId}`);
+    router.push({
+      pathname: "/shared/product/[id]",
+      params: { id: productId.toString() },
+    });
   };
+
+  // Add a fade-in animation when the products are loaded
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Simulate loading products
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [loading, fadeAnim]);
 
   const renderStars = (rating: number) => {
     return (
@@ -177,8 +203,14 @@ export default function ProductsScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: theme.background }]}
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          backgroundColor: theme.background,
+          opacity: fadeAnim,
+        },
+      ]}
     >
       <StatusBar style={isDarkMode ? "light" : "dark"} />
 
@@ -286,7 +318,7 @@ export default function ProductsScreen() {
           </View>
         )}
       />
-    </SafeAreaView>
+    </Animated.View>
   );
 }
 

@@ -9,15 +9,13 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.tonyaneke.myexpoapp"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.tonyaneke.myexpoapp"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -47,9 +45,6 @@
         "projectId": "5d5b1c6d-d230-49a7-a48f-d130ad1c7d8d"
       }
     },
-    "owner": "tonyaneke",
-    "cli": {
-      "appVersionSource": "remote"
-    }
+    "owner": "tonyaneke"
   }
 }

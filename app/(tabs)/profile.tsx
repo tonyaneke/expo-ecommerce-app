@@ -13,9 +13,9 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
-import { useShop } from "../contexts/ShopContext";
-import { useTheme } from "../contexts/ThemeContext";
-import { Button } from "../components/ui/button";
+import { useShop } from "../../contexts/ShopContext";
+import { useTheme } from "../../contexts/ThemeContext";
+import { Button } from "../../components/ui/button";
 
 export default function ProfileScreen() {
   const { favorites, cartItemsCount } = useShop();

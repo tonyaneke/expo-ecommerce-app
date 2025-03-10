@@ -13,8 +13,8 @@ import {
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
-import { useShop } from "../../contexts/ShopContext";
-import { Button } from "../../components/ui/button";
+import { useShop } from "../../../contexts/ShopContext";
+import { Button } from "../../../components/ui/button";
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();

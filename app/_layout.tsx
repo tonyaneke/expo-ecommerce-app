@@ -1,90 +1,51 @@
-import { Tabs } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Stack } from "expo-router";
+import { ThemeProvider } from "../contexts/ThemeContext";
 import { ShopProvider } from "../contexts/ShopContext";
-import { ThemeProvider, useTheme } from "../contexts/ThemeContext";
+import { useEffect, useState } from "react";
+import { View, StyleSheet } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-function TabsNavigator() {
-  const { theme, isDarkMode } = useTheme();
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
+export default function RootLayout() {
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // Artificially delay for two seconds to simulate a slow loading
+        // experience. Please remove this if you copy and paste the code!
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+
+        // Hide splash screen
+        SplashScreen.hideAsync();
+      }
+    }
+
+    prepare();
+  }, []);
+
+  if (!appIsReady) {
+    return null;
+  }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar style={isDarkMode ? "light" : "dark"} />
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: theme.primary,
-          tabBarInactiveTintColor: theme.secondaryText,
-          tabBarStyle: {
-            backgroundColor: theme.card,
-            borderTopColor: theme.border,
-          },
-          headerShown: false,
-        }}
-      >
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: "Home",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home-outline" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="products"
-          options={{
-            title: "Products",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="grid-outline" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="categories"
-          options={{
-            title: "Categories",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="list-outline" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="cart"
-          options={{
-            title: "Cart",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="cart-outline" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: "Profile",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="person-outline" size={size} color={color} />
-            ),
-          }}
-        />
-      </Tabs>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider>
+        <ShopProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="shared" options={{ headerShown: false }} />
+          </Stack>
+        </ShopProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
-
-export default function AppLayout() {
-  return (
-    <ThemeProvider>
-      <ShopProvider>
-        <TabsNavigator />
-      </ShopProvider>
-    </ThemeProvider>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
